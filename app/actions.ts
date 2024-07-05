@@ -5,5 +5,5 @@ import { createBankAcc } from "./api";
 
 export async function addBankAccountAction(iBanNumber: string, token: string) {
   revalidatePath("/profile");
-  createBankAcc(iBanNumber,token) 
+   createBankAcc(iBanNumber,token) 
 }
