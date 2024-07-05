@@ -89,9 +89,29 @@ export default function Registration({
       agreeToTerms: false,
     },
     validationSchema: registerValidationSchema,
-    onSubmit: (values) => {
-      console.log("Register", values);
-      handleClose();
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(
+          "https://localhost:44324/api/account/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("registration failed");
+        }
+
+        console.log("registration successful:");
+        setUserLoggedIn(true);
+        handleClose();
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
     },
   });
 
