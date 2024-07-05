@@ -75,8 +75,8 @@ export default function HomeClient() {
             <ul>
               {activeOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">
-                  {order.BuyingCurrency} {order.BuyingAmount} at{" "}
-                  {order.SellingAmount} on {order.Status}
+                  {order.buyingCurrency} {order.buyingAmount}
+                  {order.sellingAmount} {order.status}
                 </li>
               ))}
             </ul>
@@ -86,8 +86,8 @@ export default function HomeClient() {
             <ul>
               {inactiveOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">
-                  {order.BuyingCurrency} {order.BuyingAmount} at{" "}
-                  {order.SellingAmount} on {order.Status}
+                  {order.buyingCurrency} {order.buyingAmount}
+                  {order.sellingAmount} {order.status}
                 </li>
               ))}
             </ul>
