@@ -24,14 +24,16 @@ export default function Registration({
   });
 
   const registerValidationSchema = Yup.object().shape({
-    idNumber: Yup.string().required("საიდენტფიკაციო ნომერი აუცილებელია"),
+    identificationNumber: Yup.string().required(
+      "საიდენტფიკაციო ნომერი აუცილებელია"
+    ),
     phoneNumber: Yup.string()
       .matches(/^[0-9]{9}$/, "ტელეფონის ნომერი უნდა იყოს 9 ციფრი")
       .required("ტელეფონის ნომერი აუცილებელია"),
     email: Yup.string()
       .email("არასწორი ელ-ფოსტა")
       .required("ელ-ფოსტა აუცილებელია"),
-    companyName: Yup.string().required("კომპანიის სახელი აუცილებელია"),
+    userName: Yup.string().required("კომპანიის სახელი აუცილებელია"),
     password: Yup.string()
       .min(12, "პაროლი უნდა შეიცავდეს მინიმუმ 12 სიმბოლოს")
       .required("პაროლი აუცილებელია"),
@@ -80,10 +82,10 @@ export default function Registration({
 
   const registerFormik = useFormik({
     initialValues: {
-      idNumber: "",
+      identificationNumber: "",
       phoneNumber: "",
       email: "",
-      companyName: "",
+      userName: "",
       password: "",
       confirmPassword: "",
       agreeToTerms: false,
@@ -201,21 +203,21 @@ export default function Registration({
             <div className="mb-4">
               <input
                 type="text"
-                name="idNumber"
+                name="identificationNumber"
                 placeholder="საიდენტფიკაციო ნომერი"
                 className="w-full p-2 rounded bg-input-bg "
                 onChange={registerFormik.handleChange}
                 onBlur={registerFormik.handleBlur}
-                value={registerFormik.values.idNumber}
+                value={registerFormik.values.identificationNumber}
                 style={{
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderWidth: "0.8px",
                 }}
               />
-              {registerFormik.touched.idNumber &&
-                registerFormik.errors.idNumber && (
+              {registerFormik.touched.identificationNumber &&
+                registerFormik.errors.identificationNumber && (
                   <div className="text-red-500">
-                    {registerFormik.errors.idNumber}
+                    {registerFormik.errors.identificationNumber}
                   </div>
                 )}
             </div>
@@ -263,21 +265,21 @@ export default function Registration({
             <div className="mb-4">
               <input
                 type="text"
-                name="companyName"
+                name="userName"
                 placeholder="კომპანიის სახელი"
                 className="w-full p-2 rounded bg-input-bg "
                 onChange={registerFormik.handleChange}
                 onBlur={registerFormik.handleBlur}
-                value={registerFormik.values.companyName}
+                value={registerFormik.values.userName}
                 style={{
                   borderColor: "rgba(255, 255, 255, 0.1)",
                   borderWidth: "0.8px",
                 }}
               />
-              {registerFormik.touched.companyName &&
-                registerFormik.errors.companyName && (
+              {registerFormik.touched.userName &&
+                registerFormik.errors.userName && (
                   <div className="text-red-500">
-                    {registerFormik.errors.companyName}
+                    {registerFormik.errors.userName}
                   </div>
                 )}
             </div>

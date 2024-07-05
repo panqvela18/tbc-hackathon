@@ -1,20 +1,15 @@
 "use client";
 import Image from "next/image";
 import chart from "../../../public/Chart.png";
-import { ordersData } from "@/app/Data/data";
-import AddNewOrder from "./AddNewOrder";
 import { useEffect, useState } from "react";
 
 export default function HomeClient() {
   const [orders, setOrders] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem("token");
-
-        console.log(token);
 
         if (!token) {
           throw new Error("No token found");
@@ -45,8 +40,10 @@ export default function HomeClient() {
     fetchOrders();
   }, []);
 
-  const activeOrders = ordersData.filter((order) => order.isActive);
-  const inactiveOrders = ordersData.filter((order) => !order.isActive);
+  const activeOrders = orders.filter((order: any) => order.status === "Active");
+  const inactiveOrders = orders.filter(
+    (order: any) => order.status === "Canceled" || order.status === "Completed"
+  );
 
   return (
     <main>
@@ -71,25 +68,26 @@ export default function HomeClient() {
           <Image src={chart} width={1920} height={400} alt="chart" />
         </div>
       </section>
-      <AddNewOrder />
       <section className="px-[5%] my-10">
         <div className="flex justify-between w-full gap-5">
           <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
-            <h2 className="text-2xl mb-4">აქტიური ორდერები</h2>
+            <h2 className="text-2xl mb-4">Active Orders</h2>
             <ul>
-              {activeOrders.map((order) => (
+              {activeOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">
-                  {order.currency} {order.money} at {order.rate} on {order.date}
+                  {order.BuyingCurrency} {order.BuyingAmount} at{" "}
+                  {order.SellingAmount} on {order.Status}
                 </li>
               ))}
             </ul>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
-            <h2 className="text-2xl mb-4">დასრულებული ორდერები</h2>
+            <h2 className="text-2xl mb-4">Inactive Orders</h2>
             <ul>
-              {inactiveOrders.map((order) => (
+              {inactiveOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">
-                  {order.currency} {order.money} at {order.rate} on {order.date}
+                  {order.BuyingCurrency} {order.BuyingAmount} at{" "}
+                  {order.SellingAmount} on {order.Status}
                 </li>
               ))}
             </ul>
