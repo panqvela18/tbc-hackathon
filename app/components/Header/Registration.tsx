@@ -1,6 +1,6 @@
 "use client";
 import Modal from "@mui/material/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -47,10 +47,34 @@ export default function Registration({
       password: "",
     },
     validationSchema: loginValidationSchema,
-    onSubmit: (values) => {
-      console.log("Login", values);
-      setUserLoggedIn(true);
-      handleClose();
+    onSubmit: async (values) => {
+      try {
+        const response = await fetch(
+          "https://localhost:44324/api/account/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Login failed");
+        }
+
+        const data = await response.json();
+        console.log("Login successful:", data);
+        setUserLoggedIn(true);
+        handleClose();
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem("testToken", data);
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
     },
   });
 

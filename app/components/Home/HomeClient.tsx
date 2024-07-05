@@ -3,10 +3,51 @@ import Image from "next/image";
 import chart from "../../../public/Chart.png";
 import { ordersData } from "@/app/Data/data";
 import AddNewOrder from "./AddNewOrder";
+import { useEffect, useState } from "react";
 
 export default function HomeClient() {
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("testToken");
+
+        console.log(token);
+
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const response = await fetch(
+          "https://localhost:44324/api/order/getAllOrders",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
   const activeOrders = ordersData.filter((order) => order.isActive);
   const inactiveOrders = ordersData.filter((order) => !order.isActive);
+
   return (
     <main>
       <h1 className="text-3xl font-bold text-white text-center py-10">
