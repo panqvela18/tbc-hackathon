@@ -1,31 +1,80 @@
-"use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-
-const validationSchema = Yup.object().shape({
-  currency: Yup.string().required("ვალუტის არჩევა სავალდებულოა"),
-  count: Yup.number()
-    .required("რაოდენობა სავალდებულოა")
-    .positive("რაოდენობა უნდა იყოს დადებითი")
-    .integer("რაოდენობა უნდა იყოს მთელი რიცხვი"),
-  type: Yup.string().required("ტიპის არჩევა სავალდებულოა"),
-});
+import { FaExchangeAlt } from "react-icons/fa";
 
 export default function AddNewOrder() {
   const [open, setOpen] = useState<boolean>(false);
+  const [gelFirst, setGelFirst] = useState<boolean>(true);
+  const [selectedCurrency, setSelectedCurrency] = useState<"gel" | "usd">(
+    "gel"
+  );
+
+  const gelToUsdRate = 0.2785;
+  const usdToGelRate = 2.875;
+
+  const [ibans, setIbans] = useState([]);
+
+  useEffect(() => {
+    const fetchIbans = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const response = await fetch(
+          "http://3.76.39.238/swagger/index.html/api/iban/getAllIbans",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch IBANs");
+        }
+
+        const data = await response.json();
+        setIbans(data);
+      } catch (error) {
+        console.error("Error fetching IBANs:", error);
+      }
+    };
+
+    fetchIbans();
+  }, []);
+
+  const [gelAmount, setGelAmount] = useState<string>("0.00");
+  const [usdAmount, setUsdAmount] = useState<string>("0.00");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const handleSubmit = (values: {
-    currency: string;
-    count: number;
-    type: string;
-  }) => {
-    console.log("Order submitted:", values);
-    handleClose();
+  const handleToggleInputs = () => {
+    setGelFirst((prev) => !prev);
+    setSelectedCurrency((prev) => (prev === "gel" ? "usd" : "gel"));
+  };
+
+  useEffect(() => {
+    if (selectedCurrency === "gel") {
+      const usdValue = parseFloat(gelAmount) * gelToUsdRate;
+      setUsdAmount(usdValue.toFixed(2));
+    } else {
+      const gelValue = parseFloat(usdAmount) * usdToGelRate;
+      setGelAmount(gelValue.toFixed(2));
+    }
+  }, [gelAmount, usdAmount, selectedCurrency]);
+
+  const handleGelInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setGelAmount(event.target.value);
+  };
+
+  const handleUsdInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsdAmount(event.target.value);
   };
 
   return (
@@ -36,7 +85,6 @@ export default function AddNewOrder() {
       >
         + დაამატე ორდერი
       </button>
-
       <Modal
         open={open}
         onClose={handleClose}
@@ -44,94 +92,83 @@ export default function AddNewOrder() {
         aria-describedby="modal-modal-description"
         className="flex items-center justify-center"
       >
-        <div className="bg-[#1a1a2e] text-white p-6 rounded-lg shadow-lg w-[90%] max-w-lg">
-          <h2 className="text-2xl mb-4">დაამატე ორდერი</h2>
-          <Formik
-            initialValues={{ currency: "", count: 0, type: "" }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="mb-4">
-                  <label
-                    htmlFor="currency"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
-                    ვალუტა
-                  </label>
-                  <Field
-                    as="select"
-                    name="currency"
-                    id="currency"
-                    className="w-full p-2.5 bg-gray-800 border border-gray-600 text-white rounded"
-                  >
-                    <option value="" disabled>
-                      აირჩიე ვალუტა
-                    </option>
-                    <option value="EUR">EUR</option>
-                    <option value="USD">USD</option>
-                  </Field>
-                  <ErrorMessage
-                    name="currency"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="count"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
-                    რაოდენობა
-                  </label>
-                  <Field
-                    type="number"
-                    id="count"
-                    name="count"
-                    className="w-full p-2.5 bg-gray-800 border border-gray-600 text-white rounded"
-                  />
-                  <ErrorMessage
-                    name="count"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="type"
-                    className="block text-sm font-medium text-gray-300 mb-2"
-                  >
-                    ტიპი
-                  </label>
-                  <Field
-                    as="select"
-                    name="type"
-                    id="type"
-                    className="w-full p-2.5 bg-gray-800 border border-gray-600 text-white rounded"
-                  >
-                    <option value="" disabled>
-                      აირჩიე ტიპი
-                    </option>
-                    <option value="buy">ყიდვა</option>
-                    <option value="sell">გაყიდვა</option>
-                  </Field>
-                  <ErrorMessage
-                    name="type"
-                    component="div"
-                    className="text-red-500 text-sm mt-1"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-600 hover:bg-blue-700 transition duration-300 w-full py-2.5 rounded"
-                >
-                  დაამატე
-                </button>
-              </Form>
-            )}
-          </Formik>
+        <div className="bg-gray-900 flex items-center justify-center ">
+          <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg w-full max-w-md md:max-w-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl">თანხის კონვერტაცია</h2>
+              {selectedCurrency === "gel" ? (
+                <span className="text-gray-400">
+                  1 GEL = {gelToUsdRate.toFixed(2)} USD
+                </span>
+              ) : (
+                <span className="text-gray-400">
+                  1 USD = {usdToGelRate.toFixed(2)} GEL
+                </span>
+              )}
+            </div>
+            <div
+              className={`flex ${
+                gelFirst ? "flex-row" : "flex-row-reverse"
+              } gap-4`}
+            >
+              <div className="flex flex-col">
+                <label htmlFor="gel-amount" className="mb-2">
+                  GEL
+                </label>
+                <input
+                  type="number"
+                  id="gel-amount"
+                  className="bg-gray-700 p-2 rounded"
+                  placeholder="Amount"
+                  value={gelAmount}
+                  onChange={handleGelInputChange}
+                />
+              </div>
+              <div className="flex flex-col">
+                <label htmlFor="usd-amount" className="mb-2">
+                  USD
+                </label>
+                <input
+                  type="number"
+                  id="usd-amount"
+                  className="bg-gray-700 p-2 rounded"
+                  placeholder="Amount"
+                  value={usdAmount}
+                  onChange={handleUsdInputChange}
+                />
+              </div>
+            </div>
+            <div className="text-gray-400 my-4">
+              საკომისიო (3%) ={" "}
+              {Number(gelAmount) !== 0
+                ? (Number(gelAmount) * 0.03).toFixed(2)
+                : 0.0}
+              {selectedCurrency === "gel" ? "GEL" : "USD"}
+            </div>
+            <div className="text-gray-400 mb-4">
+              თქვენ მიიღებთ{" "}
+              {gelFirst
+                ? (Number(usdAmount) - Number(usdAmount) * 0.03).toFixed(2)
+                : (Number(gelAmount) - Number(gelAmount) * 0.03).toFixed(2)}
+              {selectedCurrency === "gel" ? "USD" : "USD"}
+            </div>
+            <div className="flex justify-center items-center mb-4">
+              <button
+                className="bg-blue-600 p-2 rounded"
+                onClick={handleToggleInputs}
+              >
+                <FaExchangeAlt color="white" />
+              </button>
+            </div>
+            <div className="flex justify-between items-center mb-4">
+              <button className="bg-gray-700 p-2 rounded flex-1">
+                აირჩიე საბანკო ანგარიში
+              </button>
+              <button className="bg-blue-600 p-2 rounded flex-1 ml-4">
+                ორდერის დამატება
+              </button>
+            </div>
+          </div>
         </div>
       </Modal>
     </section>

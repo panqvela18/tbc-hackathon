@@ -3,6 +3,7 @@ import Image from "next/image";
 import chart from "../../../public/Graph.png";
 import chart2 from "../../../public/Group 13.png";
 import { useEffect, useState } from "react";
+import AddNewOrder from "./AddNewOrder";
 
 export default function HomeClient() {
   const [orders, setOrders] = useState([]);
@@ -53,7 +54,7 @@ export default function HomeClient() {
       </h1>
       <section className="px-[5%]">
         <div className="flex flex-col">
-          <div className="text-lg mb-4 text-white">USD Rate</div>
+          <div className="text-lg mb-4 text-white">USD კურსი</div>
           <div className="text-4xl mb-4 text-white">$2.875</div>
         </div>
         <div className="w-full">
@@ -62,17 +63,19 @@ export default function HomeClient() {
       </section>
       <section className="px-[5%] mt-10">
         <div className="flex flex-col">
-          <div className="text-lg mb-4 text-white">EUR Rate</div>
+          <div className="text-lg mb-4 text-white">EUR კურსი</div>
           <div className="text-4xl mb-4 text-white">€2.98</div>
         </div>
         <div className="w-full">
           <Image src={chart2} width={1920} height={400} alt="chart" />
         </div>
       </section>
+      <AddNewOrder />
+
       <section className="px-[5%] my-10">
         <div className="flex justify-between w-full gap-5">
           <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
-            <h2 className="text-2xl mb-4">Active Orders</h2>
+            <h2 className="text-2xl mb-4">აქტიური ორდერები</h2>
             <ul>
               {activeOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">
@@ -83,7 +86,7 @@ export default function HomeClient() {
             </ul>
           </div>
           <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
-            <h2 className="text-2xl mb-4">Inactive Orders</h2>
+            <h2 className="text-2xl mb-4">დასრულებული ორდერები</h2>
             <ul>
               {inactiveOrders.map((order: any) => (
                 <li key={order.id} className="mb-2">

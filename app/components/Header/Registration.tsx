@@ -51,16 +51,13 @@ export default function Registration({
     validationSchema: loginValidationSchema,
     onSubmit: async (values) => {
       try {
-        const response = await fetch(
-          "https://localhost:44324/api/account/login",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          }
-        );
+        const response = await fetch("http://3.76.39.238/api/account/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        });
 
         if (!response.ok) {
           throw new Error("Login failed");
@@ -94,7 +91,7 @@ export default function Registration({
     onSubmit: async (values) => {
       try {
         const response = await fetch(
-          "https://localhost:44324/api/account/register",
+          "http://3.76.39.238/api/account/register",
           {
             method: "POST",
             headers: {
