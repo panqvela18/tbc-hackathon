@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
-import chart from "../../../public/Chart.png";
+import chart from "../../../public/Graph.png";
+import chart2 from "../../../public/Group 13.png";
 import { useEffect, useState } from "react";
 
 export default function HomeClient() {
@@ -65,7 +66,7 @@ export default function HomeClient() {
           <div className="text-4xl mb-4 text-white">€2.98</div>
         </div>
         <div className="w-full">
-          <Image src={chart} width={1920} height={400} alt="chart" />
+          <Image src={chart2} width={1920} height={400} alt="chart" />
         </div>
       </section>
       <section className="px-[5%] my-10">

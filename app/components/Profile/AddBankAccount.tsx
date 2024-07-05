@@ -1,12 +1,13 @@
 "use client";
 
+import { addBankAccountAction } from "@/app/actions";
 import { Modal } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AddBankAccount() {
   const [open, setOpen] = useState<boolean>(false);
-  const [iBanNumber, setIBanNumber] = useState("");
+  const [bankAccount, setBankAccount] = useState("");
   const [iBans, setIbans] = useState([]);
   const router = useRouter();
 
@@ -55,16 +56,8 @@ export default function AddBankAccount() {
       console.error("No token found in localStorage");
       return;
     }
-
     try {
-      await fetch("https://localhost:44324/api/iban/addIban", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ iBanNumber }),
-      });
+      await addBankAccountAction(bankAccount, token);
       handleClose();
       router.refresh();
     } catch (error) {
@@ -104,8 +97,8 @@ export default function AddBankAccount() {
                     type="text"
                     id="cardNumber"
                     name="cardNumber"
-                    value={iBanNumber}
-                    onChange={(e) => setIBanNumber(e.target.value)}
+                    value={bankAccount}
+                    onChange={(e) => setBankAccount(e.target.value)}
                     className="p-3 rounded-lg text-black outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>

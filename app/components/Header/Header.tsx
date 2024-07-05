@@ -15,6 +15,11 @@ export default function Header() {
     }
     return false;
   });
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -30,15 +35,17 @@ export default function Header() {
         <Image src={logo} width={45} height={45} alt="logo" />
       </Link>
       <nav>
-        <ul className="flex items-center justify-between">
-          {userLoggedIn ? (
-            <li>
-              <DropdownMenu setUserLoggedIn={setUserLoggedIn} />
-            </li>
-          ) : (
-            <button onClick={handleOpen}>შესვლა</button>
-          )}
-        </ul>
+        {isClient && (
+          <ul className="flex items-center justify-between">
+            {userLoggedIn ? (
+              <li>
+                <DropdownMenu setUserLoggedIn={setUserLoggedIn} />
+              </li>
+            ) : (
+              <button onClick={handleOpen}>შესვლა</button>
+            )}
+          </ul>
+        )}
       </nav>
       <Registration
         open={open}
