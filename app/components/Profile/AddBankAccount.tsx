@@ -1,13 +1,12 @@
 "use client";
 
-import { addBankAccountAction } from "@/app/actions";
 import { Modal } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AddBankAccount() {
   const [open, setOpen] = useState<boolean>(false);
-  const [bankAccount, setBankAccount] = useState("");
+  const [iBanNumber, setIBanNumber] = useState("");
   const [iBans, setIbans] = useState([]);
   const router = useRouter();
 
@@ -58,7 +57,14 @@ export default function AddBankAccount() {
     }
 
     try {
-      await addBankAccountAction(bankAccount, token);
+      await fetch("https://localhost:44324/api/iban/addIban", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ iBanNumber }),
+      });
       handleClose();
       router.refresh();
     } catch (error) {
@@ -98,8 +104,8 @@ export default function AddBankAccount() {
                     type="text"
                     id="cardNumber"
                     name="cardNumber"
-                    value={bankAccount}
-                    onChange={(e) => setBankAccount(e.target.value)}
+                    value={iBanNumber}
+                    onChange={(e) => setIBanNumber(e.target.value)}
                     className="p-3 rounded-lg text-black outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
