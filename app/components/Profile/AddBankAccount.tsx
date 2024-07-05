@@ -23,7 +23,7 @@ export default function AddBankAccount() {
         }
 
         const response = await fetch(
-          "https://localhost:44324/api/iban/getAllIbans",
+          "http://3.76.39.238/api/iban/getAllIbans",
           {
             method: "GET",
             headers: {
@@ -56,7 +56,7 @@ export default function AddBankAccount() {
       return;
     }
     try {
-      await fetch("https://localhost:44324/api/iban/addIban", {
+      await fetch("http://3.76.39.238/api/iban/addIban", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -10,6 +10,7 @@ export default function Registration({
   setUserLoggedIn,
 }: ModalOpen) {
   const [activeTab, setActiveTab] = useState("login");
+  const [registrationDone, setRegistrationDone] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -24,22 +25,36 @@ export default function Registration({
   });
 
   const registerValidationSchema = Yup.object().shape({
-    identificationNumber: Yup.string().required(
-      "საიდენტფიკაციო ნომერი აუცილებელია"
-    ),
-    phoneNumber: Yup.string()
-      .matches(/^[0-9]{9}$/, "ტელეფონის ნომერი უნდა იყოს 9 ციფრი")
-      .required("ტელეფონის ნომერი აუცილებელია"),
+    identificationNumber: Yup.string()
+      .matches(/^[0-9]{6,}$/, "საიდენტფიკაციო ნომერი არასწორია")
+      .required("საიდენტფიკაციო ნომერი აუცილებელია"),
+
+    userName: Yup.string()
+      .matches(/^[a-zA-Z]{4,20}$/, "კომპანიის სახელი არასწორია")
+      .required("კომპანიის სახელი აუცილებელია"),
+
     email: Yup.string()
       .email("არასწორი ელ-ფოსტა")
       .required("ელ-ფოსტა აუცილებელია"),
-    userName: Yup.string().required("კომპანიის სახელი აუცილებელია"),
+
+    phoneNumber: Yup.string()
+      .matches(
+        /^5[0-9]{8}$/,
+        "ტელეფონის ნომერი უნდა იყოს 9 ციფრი და იწყებოდეს 5-ით"
+      )
+      .required("ტელეფონის ნომერი აუცილებელია"),
+
     password: Yup.string()
-      .min(12, "პაროლი უნდა შეიცავდეს მინიმუმ 12 სიმბოლოს")
+      .matches(
+        /^(?=.*[!@#$%^&*()_+=\-{}\[\]|\\:;\"'<>,.?/~`]).{12,20}$/,
+        "პაროლი არასწორია"
+      )
       .required("პაროლი აუცილებელია"),
+
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password")], "პაროლები არ ემთხვევა")
       .required("პაროლის დადასტურება აუცილებელია"),
+
     agreeToTerms: Yup.bool().oneOf([true], "თქვენ უნდა დათანხმდეთ პირობებს"),
   });
 
@@ -104,9 +119,8 @@ export default function Registration({
         if (!response.ok) {
           throw new Error("registration failed");
         }
-
+        setRegistrationDone(true);
         console.log("registration successful:");
-        setUserLoggedIn(true);
         handleClose();
       } catch (error) {
         console.error("Error during login:", error);
@@ -347,6 +361,7 @@ export default function Registration({
             >
               რეგისტრაცია
             </button>
+            {registrationDone && <p>რეგისტრაცია წარმატებით განხორციელდა</p>}
           </form>
         )}
       </div>

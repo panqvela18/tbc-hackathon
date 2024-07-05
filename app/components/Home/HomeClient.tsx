@@ -18,7 +18,7 @@ export default function HomeClient() {
         }
 
         const response = await fetch(
-          "https://localhost:44324/api/order/getAllOrders",
+          "http://3.76.39.238/api/order/getAllOrders",
           {
             method: "GET",
             headers: {

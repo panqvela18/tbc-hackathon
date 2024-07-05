@@ -17,16 +17,13 @@ export default function ProfileClient() {
           throw new Error("No token found");
         }
 
-        const response = await fetch(
-          "https://localhost:44324/api/user/getUser",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch("http://3.76.39.238/api/user/getUser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch profile");
