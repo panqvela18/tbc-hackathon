@@ -3,12 +3,13 @@ import { useState, useEffect } from "react";
 import { ImProfile } from "react-icons/im";
 import { FaIdCard, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import AddBankAccount from "./AddBankAccount";
 
 export default function ProfileClient() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
 
@@ -28,17 +29,17 @@ export default function ProfileClient() {
         );
 
         if (!response.ok) {
-          throw new Error("Failed to fetch orders");
+          throw new Error("Failed to fetch profile");
         }
 
         const data = await response.json();
         setProfile(data);
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error fetching profile:", error);
       }
     };
 
-    fetchOrders();
+    fetchProfile();
   }, []);
 
   return (
@@ -71,6 +72,7 @@ export default function ProfileClient() {
           </div>
         </div>
       </div>
+      <AddBankAccount />
     </main>
   );
 }
