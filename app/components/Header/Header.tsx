@@ -5,6 +5,7 @@ import DropdownMenu from "./DropDown";
 import Registration from "./Registration";
 import logo from "../../../public/logo.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   const [userLoggedIn, setUserLoggedIn] = useState<boolean>(true);
@@ -14,7 +15,9 @@ export default function Header() {
 
   return (
     <header className="text-white flex items-center justify-between px-[5%] border-b-2 border-b-white h-[84px]">
-      <Image src={logo} width={45} height={45} alt="logo" />
+      <Link href={"/"}>
+        <Image src={logo} width={45} height={45} alt="logo" />
+      </Link>
       <nav>
         <ul className="flex items-center justify-between">
           {userLoggedIn ? (
