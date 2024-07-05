@@ -8,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
-  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(true);
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);

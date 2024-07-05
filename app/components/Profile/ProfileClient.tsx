@@ -5,16 +5,37 @@ import { FaIdCard, FaPhoneAlt } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 
 export default function ProfileClient() {
-  const [token, setToken] = useState("");
-  console.log(token);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("testToken");
-      if (storedToken) {
-        setToken(storedToken);
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem("Token");
+
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const response = await fetch("https://localhost:44324/user/getUser", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+
+        const data = await response.json();
+        setProfile(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
       }
-    }
+    };
+
+    fetchOrders();
   }, []);
 
   return (
@@ -30,22 +51,19 @@ export default function ProfileClient() {
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
               <ImProfile />
-              <span>ika</span>
+              <span>{profile?.userName}</span>
             </div>
             <div className="flex items-center space-x-3">
               <FaIdCard />
-              <span>12345678</span>
+              <span>{profile?.identificationNumber}</span>
             </div>
             <div className="flex items-center space-x-3">
               <MdEmail />
-              <span>irakli.pankvelashvili@gmail.com</span>
+              <span>{profile?.email}</span>
             </div>
             <div className="flex items-center space-x-3">
               <FaPhoneAlt />
-              <span>12324242</span>
-            </div>
-            <div className="flex items-center space-x-3">
-              <span>Token: {token}</span>
+              <span>{profile?.phoneNumber}</span>
             </div>
           </div>
         </div>

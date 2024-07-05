@@ -33,6 +33,11 @@ function DropdownMenu({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUserLoggedIn(false);
+    handleItemClick();
+  };
 
   return (
     <div
@@ -70,7 +75,7 @@ function DropdownMenu({
                 onClick={handleItemClick}
                 className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
               >
-                <button onClick={() => setUserLoggedIn(false)}>გასვლა</button>
+                <button onClick={handleLogout}>გასვლა</button>
               </button>
             </div>
           </motion.div>

@@ -70,7 +70,7 @@ export default function Registration({
         handleClose();
 
         if (typeof window !== "undefined") {
-          localStorage.setItem("testToken", data);
+          localStorage.setItem("token", data);
         }
       } catch (error) {
         console.error("Error during login:", error);

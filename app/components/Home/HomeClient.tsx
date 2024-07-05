@@ -12,7 +12,7 @@ export default function HomeClient() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const token = localStorage.getItem("testToken");
+        const token = localStorage.getItem("token");
 
         console.log(token);
 
