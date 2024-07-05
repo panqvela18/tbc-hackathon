@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DropdownMenu from "./DropDown";
 import Registration from "./Registration";
 import logo from "../../../public/logo.svg";
@@ -8,10 +8,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
-  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(false);
+  const [userLoggedIn, setUserLoggedIn] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const loggedIn = localStorage.getItem("userLoggedIn");
+      return loggedIn ? JSON.parse(loggedIn) : false;
+    }
+    return false;
+  });
+
   const [open, setOpen] = useState<boolean>(false);
 
   const handleOpen = () => setOpen(true);
+
+  useEffect(() => {
+    localStorage.setItem("userLoggedIn", JSON.stringify(userLoggedIn));
+  }, [userLoggedIn]);
 
   return (
     <header className="text-white flex items-center justify-between px-[5%] border-b-2 border-b-white h-[84px]">
