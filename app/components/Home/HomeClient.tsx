@@ -42,9 +42,12 @@ export default function HomeClient() {
     fetchOrders();
   }, []);
 
-  const activeOrders = orders.filter((order: any) => order.status === "Active");
+  const activeOrders = orders.filter(
+    (order: Order) => order.status === "Active"
+  );
   const inactiveOrders = orders.filter(
-    (order: any) => order.status === "Canceled" || order.status === "Completed"
+    (order: Order) =>
+      order.status === "Canceled" || order.status === "Completed"
   );
 
   return (
@@ -74,24 +77,31 @@ export default function HomeClient() {
 
       <section className="px-[5%] my-10">
         <div className="flex justify-between w-full gap-5">
-          <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
+          <div className="bg-blue-800 p-6 rounded-lg text-center text-white text-lg w-1/2 border border-blue-700 shadow-lg">
             <h2 className="text-2xl mb-4">აქტიური ორდერები</h2>
-            <ul>
-              {activeOrders.map((order: any) => (
-                <li key={order.id} className="mb-2">
-                  {order.buyingCurrency} {order.buyingAmount}
+            <ul className="space-y-2">
+              {activeOrders.map((order: Order) => (
+                <li
+                  key={order.id}
+                  className="bg-blue-700 p-4 rounded hover:bg-blue-600 transition duration-200"
+                >
+                  {order.buyingCurrency} {order.buyingAmount} -
+                  {order.sellingCurrency}
                   {order.sellingAmount} {order.status}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2">
+          <div className="bg-gray-800 p-6 rounded-lg text-center text-white text-lg w-1/2 border border-gray-700 shadow-lg">
             <h2 className="text-2xl mb-4">დასრულებული ორდერები</h2>
-            <ul>
-              {inactiveOrders.map((order: any) => (
-                <li key={order.id} className="mb-2">
-                  {order.buyingCurrency} {order.buyingAmount}
-                  {order.sellingAmount} {order.status}
+            <ul className="space-y-2">
+              {inactiveOrders.map((order: Order) => (
+                <li
+                  key={order.id}
+                  className="bg-gray-700 p-4 rounded hover:bg-gray-600 transition duration-200"
+                >
+                  {order.buyingCurrency} {order.buyingAmount} -
+                  {order.sellingCurrency} {order.sellingAmount} {order.status}
                 </li>
               ))}
             </ul>

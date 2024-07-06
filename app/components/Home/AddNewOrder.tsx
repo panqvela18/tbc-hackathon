@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import { FaExchangeAlt } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function AddNewOrder() {
   const [open, setOpen] = useState<boolean>(false);
@@ -13,6 +14,7 @@ export default function AddNewOrder() {
   const [selectedIban, setSelectedIban] = useState<string>("");
   const [gelAmount, setGelAmount] = useState<string>("0.00");
   const [usdAmount, setUsdAmount] = useState<string>("0.00");
+  const router = useRouter();
 
   const gelToUsdRate = 0.36;
   const usdToGelRate = 2.75;
@@ -119,9 +121,10 @@ export default function AddNewOrder() {
         body: JSON.stringify(order),
       });
       handleClose();
+      router.refresh();
 
       if (!response.ok) {
-        const errorText = await response.text(); // Read the response as text
+        const errorText = await response.text();
         throw new Error(
           `Failed to create order: ${response.statusText}. ${errorText}`
         );
@@ -196,14 +199,14 @@ export default function AddNewOrder() {
               </div>
             </div>
             <div className="text-gray-400 my-4">
-              საკომისიო (3%) ={" "}
+              საკომისიო (3%) =
               {Number(gelAmount) !== 0
                 ? (Number(gelAmount) * 0.03).toFixed(2)
                 : 0.0}
               {selectedCurrency === "gel" ? " GEL" : " USD"}
             </div>
             <div className="text-gray-400 mb-4">
-              თქვენ მიიღებთ{" "}
+              თქვენ მიიღებთ
               {gelFirst
                 ? (Number(usdAmount) - Number(usdAmount) * 0.03).toFixed(2)
                 : (Number(gelAmount) - Number(gelAmount) * 0.03).toFixed(2)}
